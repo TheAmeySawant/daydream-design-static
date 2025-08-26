@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Daydream Design</title>
+  <link rel="stylesheet" href="css/config.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <nav class="nav">
+      <a href="/daydreamdesign" class="logo">
+        <img src="images/logo.png" alt="Daydream Design Logo">
+        <span>Daydream Design</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/daydreamdesign">Home</a></li>
+        <li><a href="/portfolio">Portfolio</a></li>
+        <li><a href="/dashboard/#manageProjectsCard">Manage Projects</a></li>
+        <li><span class="admin-badge">Admin Dashboard</span></li>
+      </ul>
+      <button class="menu-toggle">☰</button>
+    </nav>
+  </header>
+
+  <!-- Dashboard -->
+  <div class="dashboard">
+    <div class="dashboard-header">
+      <h1>Admin Dashboard</h1>
+      <p>Manage your portfolio projects and showcase your interior design work</p>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Create Project Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">✨</div>
+          <h2 class="card-title">Create New Project</h2>
+        </div>
+
+        <div class="success-message" id="successMessage">
+          Project created successfully!
+        </div>
+
+        <form id="createProjectForm">
+          <div class="form-group">
+            <label class="form-label" for="projectTitle">Project Title</label>
+            <input type="text" id="projectTitle" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="projectDescription">Description</label>
+            <textarea id="projectDescription" class="form-textarea" rows="4" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="projectType">Project Type</label>
+            <select id="projectType" class="form-select" required>
+              <option value="">Select project type</option>
+              <option value="residential">Residential</option>
+              <option value="commercial">Commercial</option>
+              <option value="hospitality">Hospitality</option>
+              <option value="retail">Retail</option>
+            </select>
+          </div>
+
+          <!-- NEW: Tags Input Field -->
+          <div class="form-group">
+            <label class="form-label" for="projectTags">Tags</label>
+            <input type="text" id="projectTags" class="form-input"
+              placeholder="Enter tags separated by commas (e.g., Modern, Luxury, Spacious)">
+            <small class="form-help-text">Enter tags separated by commas. Tags will be created automatically if they
+              don't exist.</small>
+          </div>
+
+          <!-- <div class="form-group">
+                        <label class="form-label">Project Image</label>
+                        <div class="image-upload" id="imageUpload">
+                            <div class="upload-icon">📸</div>
+                            <div class="upload-text">Click to upload or drag and drop</div>
+                            <div class="upload-text" style="font-size: 0.9rem; color: #999;">PNG, JPG up to 10MB</div>
+                            <input type="file" id="projectImage" class="file-input" accept="image/*" multiple>
+                            <img id="imagePreview" class="image-preview" style="display: none;">
+                        </div>
+                    </div> -->
+
+          <div class="form-group">
+            <label class="form-label">Project Images</label>
+            <div class="image-upload" id="imageUpload">
+              <div class="upload-icon">📸</div>
+              <div class="upload-text">Click to upload or drag and drop</div>
+              <div class="upload-text" style="font-size: 0.9rem; color: #999;">PNG, JPG up to 10MB each
+                (multiple files allowed)</div>
+              <input type="file" id="projectImage" class="file-input" accept="image/*" multiple>
+            </div>
+            <!-- Image preview container is now separate from upload area -->
+            <div id="imagePreviewContainer" class="image-preview-container" style="display: none;"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Create Project</button>
+        </form>
+      </div>
+
+      <!-- Manage Projects Card -->
+      <div class="card" id="manageProjectsCard">
+        <div class="card-header">
+          <div class="card-icon">🎨</div>
+          <h2 class="card-title">Manage Projects</h2>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Filter by Type</label>
+          <select id="filterType" class="form-select">
+            <option value="all">All Projects</option>
+            <option value="residential">Residential</option>
+            <option value="commercial">Commercial</option>
+            <option value="hospitality">Hospitality</option>
+            <option value="retail">Retail</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Search Projects</label>
+          <input type="text" id="searchProjects" class="form-input" placeholder="Search by title...">
+        </div>
+      </div>
+    </div>
+
+    <!-- Project List -->
+    <div class="card project-list">
+      <div class="card-header">
+        <div class="card-icon">📋</div>
+        <h2 class="card-title">Project List</h2>
+      </div>
+      <div id="projectListContainer">
+        <!-- Projects will be dynamically loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Project Popup -->
+  <div id="editProjectPopup" class="popup-overlay">
+    <div class="popup-content">
+      <div class="popup-header">
+        <h2>Edit Project</h2>
+        <button class="close-button" onclick="closeEditPopup()">×</button>
+      </div>
+      <form id="editProjectForm">
+        <input type="hidden" id="editProjectId">
+        <div class="form-group">
+          <label class="form-label" for="editProjectTitle">Project Title</label>
+          <input type="text" id="editProjectTitle" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="editProjectDescription">Description</label>
+          <textarea id="editProjectDescription" class="form-textarea" required></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="editProjectType">Project Type</label>
+          <select id="editProjectType" class="form-select" required>
+            <option value="residential">Residential</option>
+            <option value="commercial">Commercial</option>
+            <option value="hospitality">Hospitality</option>
+            <option value="retail">Retail</option>
+          </select>
+        </div>
+        <!-- Add Tags Section -->
+        <div class="form-group">
+          <label class="form-label" for="editProjectTags">Tags</label>
+          <input type="text" id="editProjectTags" class="form-input" placeholder="Enter tags separated by commas">
+          <small class="form-help">Enter tags separated by commas (e.g., luxury, modern, waterfront)</small>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Project Images</label>
+          <div id="currentImages" class="current-images-grid"></div>
+          <div class="image-upload" id="editImageUpload">
+            <div class="upload-icon">📸</div>
+            <p class="upload-text">Drag & drop images here or click to browse</p>
+            <input type="file" id="editProjectImage" class="file-input" multiple accept="image/*">
+          </div>
+          <div id="editImagePreviewContainer" class="image-preview-container" style="display: none;"></div>
+        </div>
+        <div class="popup-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeEditPopup()">Cancel</button>
+          <button type="submit" id="saveEditButton" class="btn btn-primary" disabled>Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <script>
+    // Mobile menu functionality
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+      });
+    });
+
+    // Project data storage - will be populated from server
+    let projects = [];
+    let selectedFiles = [];
+
+    // DOM Elements
+    const createProjectForm = document.getElementById("createProjectForm");
+    const imageUpload = document.getElementById("imageUpload");
+    const fileInput = document.getElementById("projectImage");
+    const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+    const successMessage = document.getElementById("successMessage");
+    const projectListContainer = document.getElementById("projectListContainer");
+    const filterType = document.getElementById("filterType");
+    const searchProjects = document.getElementById("searchProjects");
+
+    // Function to load projects from server
+    async function loadProjectsFromServer(filters = {}) {
+      try {
+        const formData = new FormData();
+        formData.append("filter_type", filters.type || filterType.value || "all");
+        formData.append("search", filters.search || searchProjects.value || "");
+        formData.append("visibility", filters.visibility || "all");
+
+        const response = await fetch("/getallprojects", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          // Transform server data to match client format (now includes tags)
+          projects = result.projects.map((project) => ({
+            id: project.id,
+            title: project.title,
+            description: project.description,
+            type: project.type,
+            property_type: project.property_type,
+            image: project.primary_image || (project.images.length > 0 ? project.images[0] : null),
+            images: project.images,
+            visible: project.visible,
+            createdAt: project.created_at ? new Date(project.created_at) : new Date(),
+            imageCount: project.image_count,
+            tags: project.tags || [],  // NEW: Include tags array
+            tagCount: project.tag_count || 0  // NEW: Include tag count
+          }));
+
+          renderProjects();
+          console.log(`Loaded ${result.total_count} project(s) from server`);
+        } else {
+          console.error("Error loading projects:", result.message);
+          // Show empty state with error message
+          projectListContainer.innerHTML = `
+        <div style="text-align: center; padding: 2rem; color: #666;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+          <p>Error loading projects: ${result.message}</p>
+          <button onclick="loadProjectsFromServer()" class="btn btn-primary" style="margin-top: 1rem;">Retry</button>
+        </div>
+      `;
+        }
+      } catch (error) {
+        console.error("Error loading projects:", error);
+        // Show empty state with error message
+        projectListContainer.innerHTML = `
+      <div style="text-align: center; padding: 2rem; color: #666;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🔌</div>
+        <p>Failed to connect to server. Please check your connection.</p>
+        <button onclick="loadProjectsFromServer()" class="btn btn-primary" style="margin-top: 1rem;">Retry</button>
+      </div>
+    `;
+      }
+    }
+
+
+    // Image upload functionality
+    imageUpload.addEventListener("click", (e) => {
+      fileInput.click();
+    });
+    imageUpload.addEventListener("dragover", handleDragOver);
+    imageUpload.addEventListener("drop", handleDrop);
+    fileInput.addEventListener("change", handleFileSelect);
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      imageUpload.classList.add("dragover");
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      imageUpload.classList.remove("dragover");
+      const files = Array.from(e.dataTransfer.files);
+      handleMultipleFiles(files);
+    }
+
+    function handleFileSelect(e) {
+      const files = Array.from(e.target.files);
+      handleMultipleFiles(files);
+    }
+
+    function handleMultipleFiles(files) {
+      files.forEach((file) => {
+        if (file.type.startsWith("image/")) {
+          selectedFiles.push(file);
+        }
+      });
+      displayImagePreviews();
+    }
+
+    function displayImagePreviews() {
+      imagePreviewContainer.innerHTML = "";
+
+      if (selectedFiles.length > 0) {
+        imagePreviewContainer.style.display = "flex";
+
+        selectedFiles.forEach((file, index) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const previewItem = document.createElement("div");
+            previewItem.className = "image-preview-item";
+            previewItem.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview ${index + 1
+              }">
+                        <button type="button" class="image-remove-btn" onclick="removeImage(${index})" title="Remove image">×</button>
+                    `;
+            imagePreviewContainer.appendChild(previewItem);
+          };
+          reader.readAsDataURL(file);
+        });
+      } else {
+        imagePreviewContainer.style.display = "none";
+      }
+    }
+
+    function removeImage(index) {
+      event.stopPropagation();
+      selectedFiles.splice(index, 1);
+      displayImagePreviews();
+    }
+
+    // Form reset function
+    function resetForm() {
+      createProjectForm.reset();
+      selectedFiles = [];
+      imagePreviewContainer.style.display = "none";
+      imagePreviewContainer.innerHTML = "";
+    }
+
+    // Create project form submission
+    createProjectForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById("projectTitle").value;
+      const description = document.getElementById("projectDescription").value;
+      const type = document.getElementById("projectType").value;
+      const tagsInput = document.getElementById("projectTags").value; // NEW: Get tags
+
+      // Create FormData object to handle file upload
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("type", type);
+      formData.append("visible", true);
+      formData.append("createdAt", new Date().toISOString());
+
+      // NEW: Process and append tags
+      if (tagsInput.trim()) {
+        // Split by comma, trim whitespace, and filter out empty strings
+        const tags = tagsInput.split(',')
+          .map(tag => tag.trim())
+          .filter(tag => tag.length > 0);
+
+        // Append each tag to FormData
+        tags.forEach(tag => {
+          formData.append("tags[]", tag);
+        });
+      }
+
+      // Append all selected images
+      selectedFiles.forEach((file, index) => {
+        formData.append("images[]", file);
+      });
+
+      try {
+        const response = await fetch("/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // Show success message
+          successMessage.style.display = "block";
+          setTimeout(() => {
+            successMessage.style.display = "none";
+          }, 3000);
+
+          // Reset form
+          resetForm();
+
+          // Reload projects from server to show the new project
+          await loadProjectsFromServer();
+        } else {
+          alert("Error: " + result.message);
+        }
+      } catch (error) {
+        console.error("Error uploading project:", error);
+        alert("Error uploading project. Please try again.");
+      }
+    });
+
+    // Filter and search functionality - now triggers server requests
+    filterType.addEventListener("change", () => {
+      loadProjectsFromServer({
+        type: filterType.value,
+        search: searchProjects.value,
+        visibility: "all",
+      });
+    });
+
+    searchProjects.addEventListener("input", () => {
+      // Add debouncing for search to avoid too many requests
+      clearTimeout(searchProjects.searchTimeout);
+      searchProjects.searchTimeout = setTimeout(() => {
+        loadProjectsFromServer({
+          type: filterType.value,
+          search: searchProjects.value,
+          visibility: "all",
+        });
+      }, 300); // 300ms delay
+    });
+
+    // Render projects function - updated to handle server data structure with tags
+    function renderProjects() {
+      if (projects.length === 0) {
+        projectListContainer.innerHTML = `
+      <div style="text-align: center; padding: 2rem; color: #666;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🎨</div>
+        <p>No projects found. Create your first project above!</p>
+      </div>
+    `;
+        return;
+      }
+
+      projectListContainer.innerHTML = projects
+        .map(
+          (project) => `
+        <div class="project-item">
+          <div class="project-thumbnail">
+            ${project.image
+              ? `<img src="${project.image}" alt="${project.title}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" onerror="this.src='https://placehold.co/80x80/c49b61/ffffff?text=IMG'">`
+              : "📷"
+            }
+          </div>
+          <div class="project-info">
+            <div class="project-title">${project.title}</div>
+            <div class="project-meta">
+              ${project.type.charAt(0).toUpperCase() + project.type.slice(1)} • 
+              ${project.imageCount || 0} image${(project.imageCount || 0) !== 1 ? "s" : ""}
+              ${project.tagCount && project.tagCount > 0 ? ` • ${project.tagCount} tag${project.tagCount !== 1 ? "s" : ""}` : ""}
+            </div>
+            <div class="project-meta" style="margin-top: 0.5rem;">
+              ${project.description.substring(0, 100)}${project.description.length > 100 ? "..." : ""}
+            </div>
+            ${project.tags && project.tags.length > 0 ? `
+              <div class="project-tags">
+                ${project.tags.slice(0, 4).map(tag =>
+              `<span class="tag-badge">${tag.name}</span>`
+            ).join("")}
+                ${project.tags.length > 4 ? `<span class="tag-badge tag-more">+${project.tags.length - 4}</span>` : ""}
+              </div>
+            ` : ""}
+          </div>
+          <div class="project-actions">
+            <label class="toggle-switch">
+              <input type="checkbox" ${project.visible ? "checked" : ""} onchange="toggleVisibility(${project.id})">
+              <span class="slider"></span>
+            </label>
+            <button class="btn btn-secondary btn-small" onclick="editProject(${project.id})">Edit</button>
+            <button class="btn btn-danger btn-small" onclick="deleteProject(${project.id})">Delete</button>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+    }
+
+    // Project management functions (these would need server-side implementations)
+    function toggleVisibility(id) {
+      const project = projects.find((p) => p.id === id);
+      if (project) {
+        project.visible = !project.visible;
+        console.log(
+          `Project "${project.title}" visibility: ${project.visible ? "visible" : "hidden"
+          }`
+        );
+        // TODO: Send update to server
+        // updateProjectVisibility(id, project.visible);
+      }
+    }
+
+    // Track changes in the edit form
+    let hasChanges = false;
+    let editedImages = new Set(); // Track which images have been marked for deletion
+    let selectedEditFiles = []; // New files to be added
+
+    // Populate edit form with existing data
+    function editProject(id) {
+      const project = projects.find((p) => p.id === id);
+      if (project) {
+        // Reset tracking variables
+        hasChanges = false;
+        editedImages.clear();
+        selectedEditFiles = [];
+
+        // Fill form with existing data
+        document.getElementById("editProjectId").value = project.id;
+        document.getElementById("editProjectTitle").value = project.title;
+        document.getElementById("editProjectDescription").value = project.description;
+        document.getElementById("editProjectType").value = project.type;
+        // Fix tags extraction - get the 'name' project from each tag object
+        document.getElementById("editProjectTags").value = project.tags && project.tags.length > 0
+          ? project.tags.map(tag => tag.name).join(', ')
+          : '';
+
+
+        // Display current images
+        const currentImagesContainer = document.getElementById("currentImages");
+        currentImagesContainer.innerHTML = project.images.map((image, index) => `
+            <div class="current-image-item" data-image="${image}">
+                <img src="${image}" alt="Project image ${index + 1}">
+                <div class="image-actions">
+                    <button type="button" class="image-action-btn" onclick="toggleImageDeletion('${image}')" title="Mark for deletion">
+                        🗑️
+                    </button>
+                    ${index === 0 ? '' : `
+                        <button type="button" class="image-action-btn" onclick="makeImagePrimary('${image}')" title="Set as primary">
+                            ⭐
+                        </button>
+                    `}
+                </div>
+            </div>
+        `).join('');
+
+        // Set up edit image upload
+        const editImageUpload = document.getElementById("editImageUpload");
+        const editFileInput = document.getElementById("editProjectImage");
+
+        editImageUpload.addEventListener("dragover", handleEditDragOver);
+        editImageUpload.addEventListener("drop", handleEditDrop);
+        editFileInput.addEventListener("change", handleEditFileSelect);
+
+        // Show popup
+        document.getElementById("editProjectPopup").style.display = "block";
+        document.body.style.overflow = "hidden"; // Prevent background scrolling
+
+        // Disable save button initially
+        document.getElementById("saveEditButton").disabled = true;
+
+        // Add change listeners to form fields
+        setupEditChangeListeners();
+      }
+    }
+
+    function setupEditChangeListeners() {
+      const form = document.getElementById("editProjectForm");
+      const formInputs = form.querySelectorAll("input, textarea, select");
+
+      formInputs.forEach(input => {
+        input.addEventListener("change", checkForChanges);
+        input.addEventListener("input", checkForChanges);
+      });
+    }
+
+    function checkForChanges() {
+      const projectId = document.getElementById("editProjectId").value;
+      const project = projects.find(p => p.id === parseInt(projectId));
+
+      if (!project) return;
+
+      const titleChanged = document.getElementById("editProjectTitle").value !== project.title;
+      const descriptionChanged = document.getElementById("editProjectDescription").value !== project.description;
+      const typeChanged = document.getElementById("editProjectType").value !== project.type;
+      
+      // Fix tags comparison - compare with tag names
+      const currentTags = document.getElementById("editProjectTags").value;
+      const originalTags = project.tags && project.tags.length > 0
+        ? project.tags.map(tag => tag.name).join(', ')
+        : '';
+      const tagsChanged = currentTags !== originalTags;
+
+      hasChanges = titleChanged || descriptionChanged || typeChanged || tagsChanged || editedImages.size > 0 || selectedEditFiles.length > 0;
+
+      document.getElementById("saveEditButton").disabled = !hasChanges;
+    }
+
+    function toggleImageDeletion(imagePath) {
+      const imageElement = document.querySelector(`[data-image="${imagePath}"]`);
+      if (editedImages.has(imagePath)) {
+        editedImages.delete(imagePath);
+        imageElement.style.opacity = "1";
+      } else {
+        editedImages.add(imagePath);
+        imageElement.style.opacity = "0.5";
+      }
+      checkForChanges();
+    }
+
+    function makeImagePrimary(imagePath) {
+      const currentImages = document.getElementById("currentImages");
+      const images = Array.from(currentImages.children);
+      const imageToMove = currentImages.querySelector(`[data-image="${imagePath}"]`);
+
+      if (imageToMove && images.length > 0) {
+        currentImages.insertBefore(imageToMove, images[0]);
+        hasChanges = true;
+        checkForChanges();
+      }
+    }
+
+    function handleEditDragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add("dragover");
+    }
+
+    function handleEditDrop(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove("dragover");
+      const files = Array.from(e.dataTransfer.files);
+      handleEditMultipleFiles(files);
+    }
+
+    function handleEditFileSelect(e) {
+      const files = Array.from(e.target.files);
+      handleEditMultipleFiles(files);
+    }
+
+    function handleEditMultipleFiles(files) {
+      files.forEach(file => {
+        if (file.type.startsWith("image/")) {
+          selectedEditFiles.push(file);
+        }
+      });
+      displayEditImagePreviews();
+      checkForChanges();
+    }
+
+    function displayEditImagePreviews() {
+      const container = document.getElementById("editImagePreviewContainer");
+      container.innerHTML = "";
+
+      if (selectedEditFiles.length > 0) {
+        container.style.display = "flex";
+        selectedEditFiles.forEach((file, index) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const previewItem = document.createElement("div");
+            previewItem.className = "image-preview-item";
+            previewItem.innerHTML = `
+                    <img src="${e.target.result}" alt="New image ${index + 1}">
+                    <button type="button" class="image-remove-btn" onclick="removeEditImage(${index})" title="Remove image">×</button>
+                `;
+            container.appendChild(previewItem);
+          };
+          reader.readAsDataURL(file);
+        });
+      } else {
+        container.style.display = "none";
+      }
+    }
+
+    function removeEditImage(index) {
+      selectedEditFiles.splice(index, 1);
+      displayEditImagePreviews();
+      checkForChanges();
+    }
+
+    function closeEditPopup() {
+      if (hasChanges) {
+        if (confirm("You have unsaved changes. Are you sure you want to close?")) {
+          resetEditForm();
+        }
+      } else {
+        resetEditForm();
+      }
+    }
+
+    function resetEditForm() {
+      document.getElementById("editProjectPopup").style.display = "none";
+      document.body.style.overflow = "auto";
+      document.getElementById("editProjectForm").reset();
+      document.getElementById("editImagePreviewContainer").innerHTML = "";
+      document.getElementById("currentImages").innerHTML = "";
+      document.getElementById("editProjectTags").value = ""; // Reset tags field
+      hasChanges = false;
+      editedImages.clear();
+      selectedEditFiles = [];
+    }
+
+    async function deleteProject(id) {
+      const project = projects.find(p => p.id === id);
+      if (!project) return;
+
+      if (confirm(`Are you sure you want to delete "${project.title}"? This action cannot be undone.`)) {
+        try {
+          const formData = new FormData();
+          formData.append("id", id);
+
+          const response = await fetch("/delete", {
+            method: "POST",
+            body: formData
+          });
+
+          const result = await response.json();
+
+          if (response.ok && result.success) {
+            // Remove from local array and re-render
+            projects = projects.filter(p => p.id !== id);
+            renderProjects();
+
+            // Show success message
+            const successMessage = document.createElement("div");
+            successMessage.className = "delete-success-message";
+            successMessage.textContent = `"${project.title}" has been deleted`;
+            document.body.appendChild(successMessage);
+
+            // Remove message after 3 seconds
+            setTimeout(() => {
+              successMessage.classList.add("fade-out");
+              setTimeout(() => successMessage.remove(), 500);
+            }, 3000);
+          } else {
+            alert("Error: " + (result.message || "Failed to delete project"));
+          }
+        } catch (error) {
+          console.error("Error deleting project:", error);
+          alert("Error deleting project. Please try again.");
+        }
+      }
+    }
+
+    // Handle edit form submission
+    document.getElementById("editProjectForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const projectId = document.getElementById("editProjectId").value;
+      const title = document.getElementById("editProjectTitle").value;
+      const description = document.getElementById("editProjectDescription").value;
+      const type = document.getElementById("editProjectType").value;
+      const tags = document.getElementById("editProjectTags").value;
+
+      // Create FormData object
+      const formData = new FormData();
+      formData.append("id", projectId);
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("type", type);
+
+      // Handle tags - convert to array
+      if (tags && tags.trim()) {
+        const tagArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+        tagArray.forEach(tag => {
+          formData.append("tags[]", tag);
+        });
+      }
+
+      // Add deleted images
+      if (typeof editedImages !== 'undefined' && editedImages.length > 0) {
+        editedImages.forEach(imagePath => {
+          formData.append("deletedImages[]", imagePath);
+        });
+      }
+
+      // Add new images
+      if (typeof selectedEditFiles !== 'undefined' && selectedEditFiles.length > 0) {
+        selectedEditFiles.forEach(file => {
+          formData.append("newImages[]", file);
+        });
+      }
+
+      // Get primary image path
+      const primaryImageElement = document.querySelector("#currentImages .current-image-item.primary") ||
+        document.querySelector("#currentImages .current-image-item");
+      if (primaryImageElement && primaryImageElement.dataset.image) {
+        formData.append("primaryImage", primaryImageElement.dataset.image);
+      }
+
+      // Disable submit button during processing
+      const submitButton = document.getElementById("saveEditButton");
+      submitButton.disabled = true;
+      submitButton.textContent = "Saving...";
+
+      try {
+        const response = await fetch("/edit", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          // Reset form and close popup
+          resetEditForm();
+
+          // Show success message with details
+          let message = "Project updated successfully!";
+          if (result.tagsAdded > 0) {
+            message += `\n${result.tagsAdded} tags added.`;
+          }
+          if (result.tagsRemoved > 0) {
+            message += `\n${result.tagsRemoved} tags removed.`;
+          }
+          if (result.uploadedImages && result.uploadedImages.length > 0) {
+            message += `\n${result.uploadedImages.length} new images uploaded.`;
+          }
+
+          alert(message);
+
+          // Reload projects to show updates
+          await loadProjectsFromServer();
+        } else {
+          throw new Error(result.message || "Failed to update project");
+        }
+      } catch (error) {
+        console.error("Error updating project:", error);
+        alert("Error updating project: " + error.message);
+      } finally {
+        // Re-enable submit button
+        submitButton.disabled = false;
+        submitButton.textContent = "Save Changes";
+      }
+    });
+
+    // Load projects when page loads
+    document.addEventListener("DOMContentLoaded", () => {
+      loadProjectsFromServer();
+    });
+
+    // Header scroll effect
+    window.addEventListener("scroll", () => {
+      const header = document.querySelector(".header");
+      if (window.scrollY > 50) {
+        header.style.boxShadow = "0 4px 20px rgba(0,0,0,0.15)";
+      } else {
+        header.style.boxShadow = "0 2px 20px rgba(0,0,0,0.1)";
+      }
+    });
+
+  </script>
+</body>
+
+</html>

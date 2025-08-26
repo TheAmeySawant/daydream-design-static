@@ -1,0 +1,278 @@
+<!DOCTYPE html>ī
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Daydream Design</title>
+    <link rel="stylesheet" href="css/config.css">
+    <link rel="stylesheet" href="css/portfolio.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="daydreamdesign.html" class="logo">
+                <img src="images/logo.png" alt="Daydream Design Logo">
+                <span>Daydream Design</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/daydreamdesign">Home</a></li>
+                <li><a href="/daydreamdesign/#about">About</a></li>
+                <li><a href="/daydreamdesign/#services">Services</a></li>
+                <li><a href="/portfolio">Portfolio</a></li>
+                <li><a href="/daydreamdesign/#experience">Experience</a></li>
+                <li><a href="/daydreamdesign/#contact">Contact</a></li>
+            </ul>
+            <button class="menu-toggle">☰</button>
+        </nav>
+    </header>
+
+    <!-- Portfolio Header -->
+    <section class="portfolio-header">
+        <h1>Our Portfolio</h1>
+        <p>Explore our collection of thoughtfully designed spaces that reflect our commitment to excellence and
+            creativity in interior design.</p>
+    </section>
+
+    <!-- Portfolio Filter -->
+    <div class="portfolio-filter">
+        <button class="filter-button active" data-filter="all">All Projects</button>
+        <button class="filter-button" data-filter="residential">Residential</button>
+        <button class="filter-button" data-filter="commercial">Commercial</button>
+        <button class="filter-button" data-filter="hospitality">Hospitality</button>
+        <button class="filter-button" data-filter="retail">Retail</button>
+    </div>
+
+    <!-- Portfolio Grid -->
+    <div class="portfolio-grid">
+        <!-- Sample portfolio items - Replace image URLs with actual project images -->
+        <div class="portfolio-item" data-category="residential">
+            <div class="portfolio-image" style="background-image: url('images/img1.jpeg')"></div>
+            <div class="portfolio-info">
+                <h3>Luxury Apartment Makeover</h3>
+                <p>Complete renovation of a 3BHK apartment in Marine Drive, featuring custom furniture and smart home
+                    integration.</p>
+                <div class="portfolio-tags">
+                    <span class="tag">Residential</span>
+                    <span class="tag">Modern</span>
+                    <span class="tag">Smart Home</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="portfolio-item" data-category="commercial">
+            <div class="portfolio-image" style="background-image: url('images/img2.jpg')"></div>
+            <div class="portfolio-info">
+                <h3>Tech Startup Office</h3>
+                <p>Contemporary office design emphasizing collaboration and creativity for a growing tech company.</p>
+                <div class="portfolio-tags">
+                    <span class="tag">Commercial</span>
+                    <span class="tag">Contemporary</span>
+                    <span class="tag">Open Plan</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="portfolio-item" data-category="hospitality">
+            <div class="portfolio-image" style="background-image: url('images/img3.jpg')">
+            </div>
+            <div class="portfolio-info">
+                <h3>Fine Dining Restaurant</h3>
+                <p>Elegant restaurant interior combining traditional Indian elements with modern luxury.</p>
+                <div class="portfolio-tags">
+                    <span class="tag">Hospitality</span>
+                    <span class="tag">Luxury</span>
+                    <span class="tag">Traditional</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="portfolio-item" data-category="retail">
+            <div class="portfolio-image" style="background-image: url('images/img4.jpg')"></div>
+            <div class="portfolio-info">
+                <h3>Fashion Boutique</h3>
+                <p>Minimalist retail space design focusing on product display and customer experience.</p>
+                <div class="portfolio-tags">
+                    <span class="tag">Retail</span>
+                    <span class="tag">Minimalist</span>
+                    <span class="tag">Modern</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example project with multiple images -->
+        <div class="portfolio-item" data-category="residential"
+            data-images='["images/img1.jpeg", "images/img2.jpg", "images/img3.jpg", "images/img4.jpg", "images/img5.jpg"]'>
+            <div class="portfolio-image" style="background-image: url('images/img5.jpg')"></div>
+            <div class="portfolio-info">
+                <h3>Luxury Villa Transformation</h3>
+                <p>Complete renovation and interior de
+                    sign of a 5000 sq ft villa, featuring modern aesthetics, smart
+                    home integration, and sustainable materials.</p>
+                <div class="portfolio-tags">
+                    <span class="tag">Residential</span>
+                    <span class="tag">Luxury</span>
+                    <span class="tag">Smart Home</span>
+                    <span class="tag">Sustainable</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for project details -->
+    <div class="modal" id="projectModal">
+        <button class="close-modal">&times;</button>
+        <div class="modal-content">
+            <div class="modal-gallery">
+                <button class="gallery-nav prev">&lt;</button>
+                <div class="gallery-container">
+                    <div class="gallery-images"></div>
+                </div>
+                <button class="gallery-nav next">&gt;</button>
+            </div>
+            <div class="modal-info">
+                <h2></h2>
+                <p></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Filter functionality
+        const filterButtons = document.querySelectorAll('.filter-button');
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                const filter = button.getAttribute('data-filter');
+
+                portfolioItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Modal functionality
+        const modal = document.getElementById('projectModal');
+        const modalImage = modal.querySelector('.modal-image');
+        const modalTitle = modal.querySelector('h2');
+        const modalDescription = modal.querySelector('p');
+        const closeModal = modal.querySelector('.close-modal');
+
+        let currentImageIndex = 0;
+        const galleryContainer = modal.querySelector('.gallery-images');
+        const prevButton = modal.querySelector('.gallery-nav.prev');
+        const nextButton = modal.querySelector('.gallery-nav.next');
+
+        function updateGalleryNavigation(totalImages) {
+            prevButton.style.display = currentImageIndex === 0 ? 'none' : 'block';
+            nextButton.style.display = currentImageIndex === totalImages - 1 ? 'none' : 'block';
+        }
+
+        function showImage(index, images) {
+            currentImageIndex = index;
+            galleryContainer.style.transform = `translateX(-${index * 100}%)`;
+            updateGalleryNavigation(images.length);
+        }
+
+        portfolioItems.forEach(item => {
+            item.addEventListener('click', () => {
+                let images = [];
+                // Check if the item has multiple images defined
+                const imagesData = item.getAttribute('data-images');
+                if (imagesData) {
+                    images = JSON.parse(imagesData);
+                } else {
+                    // Fallback to single image
+                    images = [
+                        item.querySelector('.portfolio-image').style.backgroundImage
+                            .replace('url("', '')
+                            .replace('")', '')
+                    ];
+                }
+                const title = item.querySelector('h3').textContent;
+                const description = item.querySelector('p').textContent;
+
+                // Clear and populate gallery
+                galleryContainer.innerHTML = '';
+                images.forEach(src => {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = title;
+                    galleryContainer.appendChild(img);
+                });
+
+                modalTitle.textContent = title;
+                modalDescription.textContent = description;
+                modal.style.display = 'block';
+                currentImageIndex = 0;
+                showImage(0, images);
+            });
+        });
+
+        prevButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const images = galleryContainer.querySelectorAll('img');
+            if (currentImageIndex > 0) {
+                showImage(currentImageIndex - 1, images);
+            }
+        });
+
+        nextButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const images = galleryContainer.querySelectorAll('img');
+            if (currentImageIndex < images.length - 1) {
+                showImage(currentImageIndex + 1, images);
+            }
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = 'none';
+            }
+        });
+
+        // Mobile menu toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

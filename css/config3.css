@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap");
+
+:root {
+  /* Font Families */
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Open Sans", sans-serif;
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Font Sizes */
+  --font-size-base: 1rem;
+  --font-size-sm: 0.875rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.5rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.5rem;
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.8;
+
+  /* Primary Brand Color - Gold */
+  --color-primary: #c49b61;
+  --color-primary-light: #d4af7a;
+
+  /* Secondary Color - Dark Gray for sophistication */
+  --color-secondary: #333333;
+
+  /* Background Colors */
+  --color-background: #ffffff;
+  --color-background-alt: #f8f8f8;
+
+  /* Call-to-Action Colors */
+  --color-cta: #c49b61;
+  --color-cta-hover: transparent;
+
+  /* Text Colors */
+  --color-text: #333333;
+  --color-text-light: #666666;
+  --color-text-white: #ffffff;
+
+  /* Header Background */
+  --color-header-bg: rgba(255, 255, 255, 0.95);
+}

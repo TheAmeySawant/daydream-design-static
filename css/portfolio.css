@@ -1,0 +1,509 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+body {
+  font-family: var(--font-body);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  overflow-x: hidden;
+  background: var(--color-background-alt);
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: var(--color-header-bg);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  padding: 1rem 2rem;
+  transition: all 0.3s ease;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logo {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 40px;
+  width: auto;
+  margin-right: 10px;
+}
+
+.logo span {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--color-text);
+  transition: color 0.3s ease;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: var(--color-cta);
+}
+
+/* Portfolio Header */
+.portfolio-header {
+  padding: 8rem 2rem 4rem;
+  text-align: center;
+  background: white;
+}
+
+.portfolio-header h1 {
+  font-size: var(--font-size-5xl);
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  font-weight: var(--font-weight-light);
+}
+
+.portfolio-header p {
+  max-width: 800px;
+  margin: 0 auto;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Portfolio Filter */
+.portfolio-filter {
+  padding: 2rem;
+  text-align: center;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+.filter-button {
+  padding: 0.5rem 1.5rem;
+  margin: 0.5rem;
+  border: none;
+  background: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  border-radius: 25px;
+}
+
+.filter-button:hover {
+  background: var(--color-primary-light);
+  color: var(--color-text-white);
+}
+
+.filter-button.active {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+}
+
+/* Portfolio Grid */
+.portfolio-grid {
+  max-width: 1400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.portfolio-item {
+  position: relative;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.portfolio-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(196, 155, 97, 0.2);
+}
+
+.portfolio-image {
+  width: 100%;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+}
+
+.portfolio-info {
+  padding: 1.5rem;
+}
+
+.portfolio-info h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.portfolio-info p {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.portfolio-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 0.3rem 0.8rem;
+  background: #f0f0f0;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 2000;
+  overflow: hidden;
+}
+
+.modal-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+}
+
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  z-index: 2001;
+  transition: background-color 0.3s ease;
+}
+
+.close-modal:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-gallery {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  min-height: 0;
+  padding: 1rem;
+}
+
+.gallery-container {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.gallery-images {
+  display: flex;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.gallery-images img {
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  z-index: 2;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+}
+
+.gallery-nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.gallery-nav.prev {
+  left: 1.5rem;
+}
+
+.gallery-nav.next {
+  right: 1.5rem;
+}
+
+.modal-info {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  color: #333;
+  padding: 1.5rem;
+  margin: 0 1rem 1rem 1rem;
+  border-radius: 10px;
+  max-height: 30vh;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .logo img {
+    height: 30px;
+  }
+
+  .logo span {
+    font-size: 1.2rem;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .logo {
+    margin-bottom: 1rem;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .portfolio-header {
+    padding: 6rem 1rem 2rem;
+  }
+
+  .portfolio-header h1 {
+    font-size: 2rem;
+  }
+
+  .portfolio-header p {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .portfolio-filter {
+    padding: 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .filter-button {
+    padding: 0.4rem 1rem;
+    margin: 0.25rem;
+    font-size: 0.9rem;
+  }
+
+  .portfolio-item {
+    margin-bottom: 1rem;
+  }
+
+  .portfolio-image {
+    height: 200px;
+  }
+
+  .portfolio-info {
+    padding: 1rem;
+  }
+
+  .portfolio-info h3 {
+    font-size: 1.1rem;
+  }
+
+  .modal {
+    padding: 0;
+  }
+
+  .modal-content {
+    margin: 0;
+    padding: 0;
+  }
+
+  .modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .modal-gallery {
+    padding: 0.5rem;
+    height: 65vh; /* Reduce gallery height to make room for info */
+  }
+
+  .close-modal {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 35px;
+    height: 35px;
+    font-size: 1.5rem;
+  }
+
+  .gallery-nav {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+
+  .gallery-nav.prev {
+    left: 0.5rem;
+  }
+
+  .gallery-nav.next {
+    right: 0.5rem;
+  }
+
+  .modal-info {
+    padding: 1.25rem 1.25rem 8rem 1.25rem;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    margin: 0 0.5rem 0.5rem 0.5rem;
+    max-height: 45vh;
+    overflow-y: auto;
+  }
+
+  .modal-info.active {
+    transform: translateY(0);
+  }
+
+  .modal-info::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+  }
+
+  .modal-info h2 {
+    font-size: 1.2rem;
+    margin: 0.5rem 0 0.75rem 0;
+    padding-right: 1rem;
+  }
+
+  .modal-info p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #555;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .gallery-nav {
+    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .gallery-nav:active {
+    transform: translateY(-50%) scale(0.95);
+    background: rgba(255, 255, 255, 0.25);
+  }
+}

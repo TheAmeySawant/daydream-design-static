@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Daydream Design</title>
+    <link rel="stylesheet" href="css/config.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+    <!-- Background Video -->
+    <video class="background-video" autoplay muted loop playsinline>
+        <source src="videos/backvideo.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+
+    <!-- Floating Elements -->
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <div class="login-card">
+            <div class="security-badge">🔒 Secure</div>
+
+            <div class="login-header">
+                <div class="logo">
+                    <img src="images/logo.png" alt="Daydream Design Logo">
+                    <span>Daydream Design</span>
+                </div>
+                <h1 class="login-title">Admin Portal</h1>
+                <p class="login-subtitle">Sign in to manage your portfolio</p>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                Invalid credentials. Please try again.
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="Enter your username" required
+                        autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" class="form-input" placeholder="Enter your password"
+                            required autocomplete="current-password">
+                        <button type="button" class="password-toggle" id="passwordToggle">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" class="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="login-button" id="loginButton">
+                    <div class="spinner" id="spinner"></div>
+                    <span id="buttonText">Sign In</span>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <a href="/" class="back-home">← Back to Website</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const passwordToggle = document.getElementById('passwordToggle');
+        const rememberMe = document.getElementById('rememberMe');
+        const loginButton = document.getElementById('loginButton');
+        const buttonText = document.getElementById('buttonText');
+        const spinner = document.getElementById('spinner');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Demo credentials (in production, this would be handled by a secure backend)
+        const DEMO_CREDENTIALS = {
+            username: 'admin',
+            password: 'daydream2024'
+        };
+
+        // Password toggle functionality
+        passwordToggle.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            passwordToggle.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+
+        // Form submission
+        // loginForm.addEventListener('submit', async (e) => {
+        //     e.preventDefault();
+
+        //     const username = usernameInput.value.trim();
+        //     const password = passwordInput.value;
+
+        //     // Hide any previous error messages
+        //     errorMessage.style.display = 'none';
+
+        //     // Show loading state
+        //     loginButton.disabled = true;
+        //     spinner.style.display = 'inline-block';
+        //     buttonText.textContent = 'Signing In...';
+
+        //     // Simulate API call delay
+        //     await new Promise(resolve => setTimeout(resolve, 1500));
+
+        //     // Check credentials
+        //     if (username === DEMO_CREDENTIALS.username && password === DEMO_CREDENTIALS.password) {
+        //         // Success
+        //         buttonText.textContent = 'Success!';
+        //         loginButton.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+
+        //         // Store login state
+        //         if (rememberMe.checked) {
+        //             localStorage.setItem('daydream_admin_logged_in', 'true');
+        //             localStorage.setItem('daydream_admin_username', username);
+        //         } else {
+        //             sessionStorage.setItem('daydream_admin_logged_in', 'true');
+        //             sessionStorage.setItem('daydream_admin_username', username);
+        //         }
+
+        //         // Redirect to dashboard after short delay
+        //         setTimeout(() => {
+        //             window.location.href = 'dashboard.html';
+        //         }, 1000);
+
+        //     } else {
+        //         // Error
+        //         errorMessage.style.display = 'block';
+        //         loginButton.disabled = false;
+        //         spinner.style.display = 'none';
+        //         buttonText.textContent = 'Sign In';
+
+        //         // Shake animation for error
+        //         loginCard.style.animation = 'shake 0.5s ease-in-out';
+        //         setTimeout(() => {
+        //             loginCard.style.animation = '';
+        //         }, 500);
+        //     }
+        // });
+
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+
+            // Hide any previous error messages
+            errorMessage.style.display = 'none';
+
+            loginButton.disabled = true;
+            spinner.style.display = 'inline-block';
+            buttonText.textContent = 'Signing In...';
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    buttonText.textContent = 'Success!';
+                    loginButton.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+
+                    if (rememberMe.checked) {
+                        localStorage.setItem('daydream_admin_username', username);
+                    } else {
+                        // sessionStorage.setItem('daydream_admin_logged_in', 'true');
+                        // sessionStorage.setItem('daydream_admin_username', username);
+                    }
+
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1000);
+
+                } else {
+                    errorMessage.style.display = 'block';
+                    console.log(data.message);
+                    errorMessage.textContent = data.message || 'Invalid credentials. Please try again.';
+                    loginButton.disabled = false;
+                    spinner.style.display = 'none';
+                    buttonText.textContent = 'Sign In';
+
+                    loginCard.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => { loginCard.style.animation = ''; }, 500);
+                }
+
+            } catch (error) {
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'An error occurred. Please try again.' + error.message;
+                loginButton.disabled = false;
+                spinner.style.display = 'none';
+                buttonText.textContent = 'Sign In';
+            }
+        });
+
+
+        // Check if already logged in
+        // window.addEventListener('load', () => {
+        //     const isLoggedIn = localStorage.getItem('daydream_admin_logged_in') ||
+        //         sessionStorage.getItem('daydream_admin_logged_in');
+
+        //     if (isLoggedIn === 'true') {
+        //         // Show already logged in message and redirect
+        //         errorMessage.style.display = 'block';
+        //         errorMessage.style.background = 'rgba(40, 167, 69, 0.1)';
+        //         errorMessage.style.color = '#28a745';
+        //         errorMessage.style.borderColor = 'rgba(40, 167, 69, 0.2)';
+        //         errorMessage.textContent = 'Already logged in. Redirecting...';
+
+        //         setTimeout(() => {
+        //             window.location.href = 'dashboard.html';
+        //         }, 2000);
+        //     }
+        // });
+
+        // Shake animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Input focus animations
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.style.transform = 'scale(1.02)';
+            });
+
+            input.addEventListener('blur', () => {
+                input.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Alt + L to focus username
+            if (e.altKey && e.key === 'l') {
+                e.preventDefault();
+                usernameInput.focus();
+            }
+
+            // Enter to submit when focused on any input
+            if (e.key === 'Enter' && (document.activeElement === usernameInput || document.activeElement === passwordInput)) {
+                e.preventDefault();
+                loginForm.dispatchEvent(new Event('submit'));
+            }
+        });
+
+        // Forgot password functionality
+        document.querySelector('.forgot-password').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Contact your administrator to reset your password.\n\nDemo credentials:\nUsername: admin\nPassword: daydream2024');
+        });
+
+        // Auto-fill demo credentials (for development only)
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                usernameInput.value = DEMO_CREDENTIALS.username;
+                passwordInput.value = DEMO_CREDENTIALS.password;
+                usernameInput.dispatchEvent(new Event('input'));
+                passwordInput.dispatchEvent(new Event('input'));
+            }
+        });
+
+        // Add subtle parallax effect to floating elements
+        document.addEventListener('mousemove', (e) => {
+            const floatingElements = document.querySelectorAll('.floating-element');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            floatingElements.forEach((element, index) => {
+                const speed = (index + 1) * 0.5;
+                const xPos = (x - 0.5) * speed;
+                const yPos = (y - 0.5) * speed;
+                element.style.transform = `translate(${xPos}px, ${yPos}px)`;
+            });
+        });
+
+        const loginCard = document.querySelector('.login-card');
+    </script>
+</body>
+
+</html>
