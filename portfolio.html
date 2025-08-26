@@ -116,7 +116,9 @@
         // Function to render portfolio items
         function renderPortfolio() {
             const portfolioGrid = document.getElementById('portfolioGrid');
-            portfolioGrid.innerHTML = projects.map(project => `
+            // Sort projects by id in descending order
+            const sortedProjects = [...projects].sort((a, b) => b.id - a.id);
+            portfolioGrid.innerHTML = sortedProjects.map(project => `
                 <div class="portfolio-item" data-category="${project.category}" data-images='${JSON.stringify(project.images)}'>
                     <div class="portfolio-image" style="background-image: url('${project.images[0]}')"></div>
                     <div class="portfolio-info">
